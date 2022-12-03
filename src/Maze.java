@@ -1,7 +1,11 @@
-// NOTE: Go to line 320
-// set debug to "true"
-// to see Maze's view of the robot
-// which is different to the robot's memory
+// IMPORTANT:
+// Go to Maze constructor to change test Maze
+// You can set "debug" to true
+// to see how the Maze sees the Robot, which is different from the robot's memory
+
+// IMPORTANT:
+// Also update Robot's constructor
+// According to the comment
 
 class Robot {
     // These are shortcuts to make writing the code faster.
@@ -36,8 +40,8 @@ class Robot {
         this.memory = new char[21][21];
         // At least the size of the map (ex: map 10x10 -> memory (20 + 1) x (20 + 1))
         // "+1" is so that the index will equal the current positions. Prevent array overflow
-        this.X = 10; // Middle of the memory
-        this.Y = 10; // Middle of the memory
+        this.X = 10; // Middle of the memory array
+        this.Y = 10; // Middle of the memory array
 
         this.prevDirection = null;
         this.isLastDirectionSuccessful = false;
