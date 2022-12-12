@@ -1,7 +1,5 @@
 // IMPORTANT:
-// Go to Maze constructor to change test Maze
-// You can set "debug" to true
-// to see how the Maze sees the Robot, which is different from the robot's memory
+// You can set Robot "debug" to true to see robot's memory output
 
 // IMPORTANT:
 // Also update Robot's constructor
@@ -31,23 +29,24 @@ class Robot {
     boolean win; // Check if the robot has reached the goal
     static final String[] directionPriority = new String[]{U, L, D, R};
     // The robot will try to move in this priority (Up > Left > Down > Right) until it finds a new path or a goal
+    boolean debug; // Show robot's memory
 
     // Constructor
     public Robot() {
         this.maze = new Maze();
 
-        // TODO: Set to real large size 2001x2001 for BEFORE SUBMISSION
-        this.memory = new char[21][21];
+        this.memory = new char[2001][2001];
         // At least the size of the map (ex: map 10x10 -> memory (20 + 1) x (20 + 1))
         // "+1" is so that the index will equal the current positions. Prevent array overflow
-        this.X = 10; // Middle of the memory array
-        this.Y = 10; // Middle of the memory array
+        this.X = 1000; // Middle of the memory array
+        this.Y = 1000; // Middle of the memory array
 
         this.prevDirection = null;
         this.isLastDirectionSuccessful = false;
         this.isBacktracking = false;
         this.allMoves = new Stack<>();
         this.win = false;
+        this.debug = false;
 
         memory[X][Y] = v; // Mark starting position as already visited
     }
@@ -95,7 +94,7 @@ class Robot {
             }
         } while (!win);
 
-        showMemory(); // Show the memory once won
+        if (debug) showMemory();// Show the memory once won
     }
 
     boolean isNextPositionUnvisited(String direction) {
@@ -270,76 +269,77 @@ class Robot {
         System.out.println("\nRetrace to origin");
         allMoves.retraceAllMoves();
     }
-}
 
-// Linked list implementation of Stack
+    // Linked list implementation of Stack
 // Taken from wk04 example code (ok to take from)
-class Stack<T> {
-    static class Node<T> {
-        T data;
-        Node<T> next;
+    static class Stack<T> {
+        static class Node<T> {
+            T data;
+            Node<T> next;
 
-        public Node(T data) {
-            this.data = data;
-            this.next = null;
+            public Node(T data) {
+                this.data = data;
+                this.next = null;
+            }
+
+            @Override
+            public String toString() {
+                return data +
+                        " <- " + next;
+            }
         }
 
-        @Override
-        public String toString() {
-            return data +
-                    " <- " + next;
+        private int size;
+        private Node<T> head;
+
+        public Stack() {
+            size = 0;
+            head = null;
         }
-    }
 
-    private int size;
-    private Node<T> head;
-
-    public Stack() {
-        size = 0;
-        head = null;
-    }
-
-    public int size() {
-        return size;
-    }
-
-    public boolean isEmpty() {
-        return size == 0;
-    }
-
-    public void push(T item) {
-        Node<T> node = new Node<>(item);
-        if (!isEmpty()) {
-            node.next = head;
+        public int size() {
+            return size;
         }
-        head = node;
-        size++;
-    }
 
-    public void pop() {
-        if (isEmpty()) {
-            return;
+        public boolean isEmpty() {
+            return size == 0;
         }
-        head = head.next;
-        size--;
-    }
 
-    public T peek() {
-        if (isEmpty()) {
-            return null;
+        public void push(T item) {
+            Node<T> node = new Node<>(item);
+            if (!isEmpty()) {
+                node.next = head;
+            }
+            head = node;
+            size++;
         }
-        return head.data;
-    }
 
-    public void retraceAllMoves() {
-        if (!isEmpty()) {
-            System.out.println(head);
+        public void pop() {
+            if (isEmpty()) {
+                return;
+            }
+            head = head.next;
+            size--;
+        }
+
+        public T peek() {
+            if (isEmpty()) {
+                return null;
+            }
+            return head.data;
+        }
+
+        public void retraceAllMoves() {
+            if (!isEmpty()) {
+                System.out.println(head);
+            }
         }
     }
 }
+
+
 
 // Maze class taken from example code
-// Some debugging code is added, to be removed later
 public class Maze {
     int rows;
     int cols;
@@ -347,7 +347,7 @@ public class Maze {
     int robotRow;
     int robotCol;
     int steps;
-    boolean debugMaze; // TODO: Remove debugging code
+    boolean debug;
 
     // Maze input
     // Test maze here
@@ -369,9 +369,8 @@ public class Maze {
         robotCol = 5;
         steps = 0;
 
-        // TODO: Remove debugging code
         // Change to "true" to see Maze's view of the robot (this is different to the robot's memory)
-        debugMaze = false;
+        debug = false;
     }
 
     public String go(String direction) {
@@ -387,40 +386,35 @@ public class Maze {
         int currentRow = robotRow;
         int currentCol = robotCol;
 
-        // TODO: Remove debugging code
-        if (debugMaze) {
+        if (debug) {
             System.out.print(steps + "\t|\t");
             System.out.print(currentRow + ", " + currentCol);
         }
 
         if (direction.equals("UP")) {
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.print("\t ↑");
             }
 
             currentRow--;
         } else if (direction.equals("DOWN")) {
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.print("\t ↓");
             }
 
             currentRow++;
         } else if (direction.equals("LEFT")) {
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.print("\t ←");
             }
 
             currentCol--;
         } else {
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.print("\t →");
             }
 
@@ -437,8 +431,7 @@ public class Maze {
             // Wall
             steps++;
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.print("✕ Wall at ");
                 System.out.println(currentRow + ", " + currentCol);
             }
@@ -450,8 +443,7 @@ public class Maze {
             robotRow = currentRow;
             robotCol = currentCol;
 
-            // TODO: Remove debugging code
-            if (debugMaze) {
+            if (debug) {
                 System.out.println("\t" + currentRow + ", " + currentCol);
             }
 
